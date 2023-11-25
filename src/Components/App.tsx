@@ -5,9 +5,13 @@ import {
   Stack,
   Toolbar,
   Typography,
+  useTheme,
 } from "@mui/material";
+import OBR from "@owlbear-rodeo/sdk";
 import Fuse from "fuse.js";
 import { useEffect, useMemo, useState } from "react";
+import { onLibraryChange } from "../library";
+import { Track } from "../track";
 import { ActionPopover } from "./ActionPopover";
 import { Confirm, ConfirmPayload } from "./Confirm";
 import { IconMenu } from "./IconMenu";
@@ -19,11 +23,15 @@ import { TrackDialog } from "./TrackDialog";
 import { TrackList } from "./TrackList";
 import { TrackSearch } from "./TrackSearch";
 import { VolumeSlider } from "./VolumeSlider";
-import { onLibraryChange } from "../library";
-import { Track } from "../track";
 
 export function App() {
   const currentMessage = useMessage();
+
+  // theme
+  const theme = useTheme();
+
+  // role
+  const role = useRole();
 
   // track library state
   const [trackLibrary, setTrackLibrary] = useState<Track[]>([]);
@@ -63,12 +71,21 @@ export function App() {
   const [mute, setMute] = useState(true);
   const playerProps = { ready, volume, mute };
 
-  // role
-  const role = useRole();
+  // unmute reminder
+  useEffect(() => {
+    if (!ready) {
+      const id = setTimeout(() => {
+        OBR.notification.show("Don't forget to unmute your audio.", "WARNING");
+      }, 30000);
+      return () => clearTimeout(id);
+    }
+  }, [ready]);
 
   return (
     <ActionPopover
       height={role === Role.GM ? 1000 : currentMessage !== undefined ? 173 : 48}
+      badgeText={mute ? "🔇" : undefined}
+      badgeColor="transparent"
     >
       <Box onClick={ready ? undefined : () => setReady(true)}>
         {/* toolbar */}

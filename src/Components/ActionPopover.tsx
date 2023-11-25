@@ -1,3 +1,4 @@
+import { useTheme } from "@mui/material";
 import OBR from "@owlbear-rodeo/sdk";
 import { ReactNode, useEffect } from "react";
 
@@ -10,20 +11,23 @@ interface Props {
 
 export function ActionPopover(props: Props) {
   const { children, height, badgeText, badgeColor } = props;
+  const theme = useTheme();
+
   useEffect(() => {
     if (height) {
       OBR.action.setHeight(height);
     }
   }, [height]);
+
   useEffect(() => {
-    if (badgeText) {
-      OBR.action.setBadgeText(badgeText);
-    }
+    OBR.action.setBadgeText(badgeText);
   }, [badgeText]);
+
   useEffect(() => {
-    if (badgeColor) {
-      OBR.action.setBadgeBackgroundColor(badgeColor);
-    }
+    OBR.action.setBadgeBackgroundColor(
+      badgeColor ?? theme.palette.secondary.main,
+    );
   }, [badgeColor]);
+
   return children;
 }
