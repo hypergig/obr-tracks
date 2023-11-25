@@ -1,6 +1,6 @@
 {
   "name": "Tracks",
-  "description": "Quickly search and play audio tracks for your whole game to hear!",
+  "description": "Minimalistic synchronized audio player with library search",
   "version": "1.0.0",
   "manifest_version": 1,
   "icon": "/tracks_256.png",
