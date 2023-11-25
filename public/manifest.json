@@ -1,7 +1,7 @@
 {
   "name": "Tracks",
-  "description": "Minimalistic synchronized audio player with library search",
-  "version": "1.0.0",
+  "description": "Play long looping background music and ambiance from your own library with builtin search and synchronized playback",
+  "version": "1.1.0",
   "manifest_version": 1,
   "icon": "/tracks_256.png",
   "author": "hypergig@gmail.com",
