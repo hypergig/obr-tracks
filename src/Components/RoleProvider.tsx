@@ -7,17 +7,29 @@ import {
   useState,
 } from "react";
 
-const RoleContext = createContext("");
+export enum Role {
+  GM,
+  Player,
+}
+
+function stringToRole(value: "GM" | "PLAYER") {
+  if (value === "GM") {
+    return Role.GM;
+  }
+  return Role.Player;
+}
+
+const RoleContext = createContext<Role>(Role.Player);
 
 export const useRole = () => useContext(RoleContext);
 
 export function RoleProvider({ children }: { children?: ReactNode }) {
-  const [role, setRole] = useState<"GM" | "PLAYER">("PLAYER");
+  const [role, setRole] = useState<Role>(Role.Player);
   useEffect(() => {
     const handlePlayerChange = (player: Player) => {
-      setRole(player.role);
+      setRole(stringToRole(player.role));
     };
-    OBR.player.getRole().then(setRole);
+    OBR.player.getRole().then((r) => setRole(stringToRole(r)));
     return OBR.player.onChange(handlePlayerChange);
   }, []);
   return <RoleContext.Provider value={role}>{children}</RoleContext.Provider>;
@@ -31,16 +43,10 @@ interface Props {
 export function WithRole(props: Props) {
   const { gm, player } = props;
   const role = useRole();
-  switch (role) {
-    case "GM":
-      return gm;
-      break;
-    case "PLAYER":
-      return player;
-      break;
-    default:
-      return null;
+  if (role === Role.GM) {
+    return gm;
   }
+  return player;
 }
 
 export function GMOnly({ children }: { children?: ReactNode }) {
