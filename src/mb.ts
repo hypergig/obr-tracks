@@ -82,9 +82,19 @@ export function onMessage(
   const handler = (m: Metadata) => {
     const message = extractMessage(m);
     if (message?.id !== currentMessage?.id) {
+      // A future message means means there is a massive clock skew issue,
+      // so don't allow it. Instead, set the message time to now.
+      const n = now();
+      if (message && new Date(message.time).getTime() > n.getTime()) {
+        console.warn(
+          `message came from the future\nmessage time: ${message.time}\nnow: ${n}\nsetting message time to now`,
+        );
+        message.time = n;
+      }
+
       logEvent(analytics, "message_received", { action: message?.action });
       currentMessage = message;
-      console.log("tracks message: ", message);
+      console.log(`now: ${n}\ntracks message: `, message);
       callback(currentMessage);
     }
   };
