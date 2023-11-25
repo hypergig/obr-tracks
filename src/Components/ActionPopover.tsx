@@ -1,22 +1,29 @@
 import OBR from "@owlbear-rodeo/sdk";
-import { useEffect } from "react";
-import { useMessage } from "./MessageProvider";
+import { ReactNode, useEffect } from "react";
 
 interface Props {
+  children?: ReactNode;
   height?: number;
+  badgeText?: string;
+  badgeColor?: string;
 }
 
 export function ActionPopover(props: Props) {
-  const { height } = props;
+  const { children, height, badgeText, badgeColor } = props;
   useEffect(() => {
     if (height) {
       OBR.action.setHeight(height);
     }
   }, [height]);
-  return null;
-}
-
-export function PlayerPopover() {
-  const currentMessage = useMessage();
-  return <ActionPopover height={currentMessage !== undefined ? 173 : 48} />;
+  useEffect(() => {
+    if (badgeText) {
+      OBR.action.setBadgeText(badgeText);
+    }
+  }, [badgeText]);
+  useEffect(() => {
+    if (badgeColor) {
+      OBR.action.setBadgeBackgroundColor(badgeColor);
+    }
+  }, [badgeColor]);
+  return children;
 }

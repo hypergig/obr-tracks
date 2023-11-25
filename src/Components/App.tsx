@@ -14,7 +14,7 @@ import { IconMenu } from "./IconMenu";
 import { useMessage } from "./MessageProvider";
 import { MuteButton } from "./MuteButton";
 import { Player } from "./Player";
-import { GMOnly, WithRole } from "./RoleProvider";
+import { GMOnly, Role, WithRole, useRole } from "./RoleProvider";
 import { TrackDialog } from "./TrackDialog";
 import { TrackList } from "./TrackList";
 import { TrackSearch } from "./TrackSearch";
@@ -63,82 +63,88 @@ export function App() {
   const [mute, setMute] = useState(true);
   const playerProps = { ready, volume, mute };
 
+  // role
+  const role = useRole();
+
   return (
-    <Box onClick={ready ? undefined : () => setReady(true)}>
-      {/* toolbar */}
-      <AppBar position="fixed">
-        {/* menu, meader, and volume control */}
-        <Toolbar variant="dense">
-          <GMOnly>
-            <IconMenu
-              confirm={setConfirmPayload}
-              openTrackDialog={handleTrackDialogOpen}
-            />
-          </GMOnly>
-          <Typography variant="h5" sx={{ flexGrow: 1 }}>
-            Tracks
-          </Typography>
-
-          <Stack spacing={0} direction="row" alignItems="center" flex={9}>
-            <VolumeSlider onVolume={setVolume} disabled={mute} />
-            <MuteButton onMute={setMute} />
-          </Stack>
-        </Toolbar>
-
-        {/* search bar */}
-        <GMOnly>
+    <ActionPopover
+      height={role === Role.GM ? 1000 : currentMessage !== undefined ? 173 : 48}
+    >
+      <Box onClick={ready ? undefined : () => setReady(true)}>
+        {/* toolbar */}
+        <AppBar position="fixed">
+          {/* menu, meader, and volume control */}
           <Toolbar variant="dense">
-            <TrackSearch
-              trackLibrary={trackLibrary}
-              onSearch={setSearchResults}
-            />
-          </Toolbar>
-        </GMOnly>
+            <GMOnly>
+              <IconMenu
+                confirm={setConfirmPayload}
+                openTrackDialog={handleTrackDialogOpen}
+              />
+            </GMOnly>
+            <Typography variant="h5" sx={{ flexGrow: 1 }}>
+              Tracks
+            </Typography>
 
-        {/* player */}
-        <WithRole
-          gm={
-            <Collapse in={currentMessage !== undefined}>
+            <Stack spacing={0} direction="row" alignItems="center" flex={9}>
+              <VolumeSlider onVolume={setVolume} disabled={mute} />
+              <MuteButton onMute={setMute} />
+            </Stack>
+          </Toolbar>
+
+          {/* search bar */}
+          <GMOnly>
+            <Toolbar variant="dense">
+              <TrackSearch
+                trackLibrary={trackLibrary}
+                onSearch={setSearchResults}
+              />
+            </Toolbar>
+          </GMOnly>
+
+          {/* player */}
+          <WithRole
+            gm={
+              <Collapse in={currentMessage !== undefined}>
+                <Toolbar variant="dense">
+                  <Player {...playerProps} />
+                </Toolbar>
+              </Collapse>
+            }
+            player={
               <Toolbar variant="dense">
                 <Player {...playerProps} />
               </Toolbar>
-            </Collapse>
-          }
-          player={
-            <Toolbar variant="dense">
-              <ActionPopover height={currentMessage !== undefined ? 173 : 48} />
-              <Player {...playerProps} />
-            </Toolbar>
-          }
-        />
-      </AppBar>
+            }
+          />
+        </AppBar>
 
-      {/* only the gm needs the rest of the app */}
-      <GMOnly>
-        {/* padding */}
-        <Box height={48} />
-        <Box height={80} />
-        <Collapse in={currentMessage !== undefined}>
-          <Box height={144} />
-        </Collapse>
+        {/* only the gm needs the rest of the app */}
+        <GMOnly>
+          {/* padding */}
+          <Box height={48} />
+          <Box height={80} />
+          <Collapse in={currentMessage !== undefined}>
+            <Box height={144} />
+          </Collapse>
 
-        <TrackDialog
-          onClose={handleTrackDialogClose}
-          tagSuggestions={tagSuggestions}
-          track={trackDialogTrack}
-        />
-        <Confirm
-          payload={confirmPayload}
-          onClose={() => {
-            setConfirmPayload(undefined);
-          }}
-        />
-        <TrackList
-          searchResults={searchResults}
-          editTrack={setTrackDialogTrack}
-          confirm={setConfirmPayload}
-        />
-      </GMOnly>
-    </Box>
+          <TrackDialog
+            onClose={handleTrackDialogClose}
+            tagSuggestions={tagSuggestions}
+            track={trackDialogTrack}
+          />
+          <Confirm
+            payload={confirmPayload}
+            onClose={() => {
+              setConfirmPayload(undefined);
+            }}
+          />
+          <TrackList
+            searchResults={searchResults}
+            editTrack={setTrackDialogTrack}
+            confirm={setConfirmPayload}
+          />
+        </GMOnly>
+      </Box>
+    </ActionPopover>
   );
 }
