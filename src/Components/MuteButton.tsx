@@ -1,24 +1,24 @@
-import { VolumeOffRounded, VolumeUpRounded } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-import { useEffect, useState } from "react";
+import { VolumeOffRounded, VolumeUpRounded } from "@mui/icons-material"
+import { IconButton } from "@mui/material"
+import { useEffect, useState } from "react"
 
 interface Props {
-  onMute: (mute: boolean) => void;
+  onMute: (mute: boolean) => void
 }
 
 export function MuteButton(props: Props) {
-  const { onMute } = props;
+  const { onMute } = props
 
-  const [mute, setMute] = useState(true);
+  const [mute, setMute] = useState(true)
 
   useEffect(() => {
-    onMute(mute);
-  }, [mute]);
+    onMute(mute)
+  }, [mute])
 
   return (
     <IconButton
       onClick={() => {
-        setMute((m) => !m);
+        setMute((m) => !m)
       }}
     >
       {mute ? (
@@ -27,5 +27,5 @@ export function MuteButton(props: Props) {
         <VolumeUpRounded color="action" />
       )}
     </IconButton>
-  );
+  )
 }

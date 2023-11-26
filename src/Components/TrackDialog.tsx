@@ -8,28 +8,28 @@ import {
   DialogTitle,
   Stack,
   TextField,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { addTrackToLibrary } from "../library";
-import { Track } from "../track";
+} from "@mui/material"
+import { useEffect, useState } from "react"
+import { addTrackToLibrary } from "../library"
+import { Track } from "../track"
 
 interface Props {
-  onClose: () => void;
-  tagSuggestions: string[];
-  track?: Track | null;
+  onClose: () => void
+  tagSuggestions: string[]
+  track?: Track | null
 }
 
 export function TrackDialog(props: Props) {
-  const { onClose, tagSuggestions, track } = props;
-  const [title, setTitle] = useState<string>("");
-  const [url, setUrl] = useState<string>("");
-  const [tags, setTags] = useState<string[]>([]);
+  const { onClose, tagSuggestions, track } = props
+  const [title, setTitle] = useState<string>("")
+  const [url, setUrl] = useState<string>("")
+  const [tags, setTags] = useState<string[]>([])
 
   useEffect(() => {
-    setTitle(track?.title ?? "");
-    setUrl(track?.url ?? "");
-    setTags(track?.tags ?? []);
-  }, [track]);
+    setTitle(track?.title ?? "")
+    setUrl(track?.url ?? "")
+    setTags(track?.tags ?? [])
+  }, [track])
 
   return (
     <Dialog fullWidth open={track !== null} onClose={onClose}>
@@ -77,8 +77,8 @@ export function TrackDialog(props: Props) {
       <DialogActions>
         <Button
           onClick={() => {
-            addTrackToLibrary({ title: title, url: url, tags: tags });
-            onClose();
+            addTrackToLibrary({ title: title, url: url, tags: tags })
+            onClose()
           }}
         >
           Save
@@ -86,5 +86,5 @@ export function TrackDialog(props: Props) {
         <Button onClick={onClose}>Cancel</Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }

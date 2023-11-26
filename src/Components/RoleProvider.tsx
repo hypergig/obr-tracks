@@ -1,11 +1,11 @@
-import OBR, { Player } from "@owlbear-rodeo/sdk";
+import OBR, { Player } from "@owlbear-rodeo/sdk"
 import {
   ReactNode,
   createContext,
   useContext,
   useEffect,
   useState,
-} from "react";
+} from "react"
 
 export enum Role {
   GM,
@@ -14,45 +14,45 @@ export enum Role {
 
 function stringToRole(value: "GM" | "PLAYER") {
   if (value === "GM") {
-    return Role.GM;
+    return Role.GM
   }
-  return Role.Player;
+  return Role.Player
 }
 
-const RoleContext = createContext<Role>(Role.Player);
+const RoleContext = createContext<Role>(Role.Player)
 
-export const useRole = () => useContext(RoleContext);
+export const useRole = () => useContext(RoleContext)
 
 export function RoleProvider({ children }: { children?: ReactNode }) {
-  const [role, setRole] = useState<Role>(Role.Player);
+  const [role, setRole] = useState<Role>(Role.Player)
   useEffect(() => {
     const handlePlayerChange = (player: Player) => {
-      setRole(stringToRole(player.role));
-    };
-    OBR.player.getRole().then((r) => setRole(stringToRole(r)));
-    return OBR.player.onChange(handlePlayerChange);
-  }, []);
-  return <RoleContext.Provider value={role}>{children}</RoleContext.Provider>;
+      setRole(stringToRole(player.role))
+    }
+    OBR.player.getRole().then((r) => setRole(stringToRole(r)))
+    return OBR.player.onChange(handlePlayerChange)
+  }, [])
+  return <RoleContext.Provider value={role}>{children}</RoleContext.Provider>
 }
 
 interface Props {
-  gm?: ReactNode;
-  player?: ReactNode;
+  gm?: ReactNode
+  player?: ReactNode
 }
 
 export function WithRole(props: Props) {
-  const { gm, player } = props;
-  const role = useRole();
+  const { gm, player } = props
+  const role = useRole()
   if (role === Role.GM) {
-    return gm;
+    return gm
   }
-  return player;
+  return player
 }
 
 export function GMOnly({ children }: { children?: ReactNode }) {
-  return <WithRole gm={children} />;
+  return <WithRole gm={children} />
 }
 
 export function PlayerOnly({ children }: { children?: ReactNode }) {
-  return <WithRole player={children} />;
+  return <WithRole player={children} />
 }

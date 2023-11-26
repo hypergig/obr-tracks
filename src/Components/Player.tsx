@@ -1,17 +1,17 @@
-import { Card, CardContent, CardHeader } from "@mui/material";
-import { Audio } from "./Audio";
-import { ControlButtons } from "./ControlButtons";
-import { useMessage } from "./MessageProvider";
-import { GMOnly } from "./RoleProvider";
+import { Card, CardContent, CardHeader } from "@mui/material"
+import { Audio } from "./Audio"
+import { ControlButtons } from "./ControlButtons"
+import { useMessage } from "./MessageProvider"
+import { GMOnly } from "./RoleProvider"
 
 interface Props {
-  ready: boolean;
-  volume: number;
-  mute: boolean;
+  ready: boolean
+  volume: number
+  mute: boolean
 }
 
 export function Player(props: Props) {
-  const currentMessage = useMessage();
+  const currentMessage = useMessage()
   return (
     <Card
       sx={{ minWidth: "100%", marginBottom: 2, marginTop: 1 }}
@@ -35,5 +35,5 @@ export function Player(props: Props) {
         <Audio {...props} />
       </CardContent>
     </Card>
-  );
+  )
 }

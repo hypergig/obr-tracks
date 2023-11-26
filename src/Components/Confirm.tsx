@@ -5,20 +5,20 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from "@mui/material";
+} from "@mui/material"
 
 export interface ConfirmPayload {
-  message: string;
-  action: () => void;
+  message: string
+  action: () => void
 }
 
 interface Props {
-  payload?: ConfirmPayload;
-  onClose: () => void;
+  payload?: ConfirmPayload
+  onClose: () => void
 }
 
 export function Confirm(props: Props) {
-  const { payload, onClose } = props;
+  const { payload, onClose } = props
   return (
     <Dialog open={payload !== undefined} onClose={onClose}>
       <DialogTitle>Are you sure?</DialogTitle>
@@ -28,8 +28,8 @@ export function Confirm(props: Props) {
       <DialogActions>
         <Button
           onClick={() => {
-            payload?.action();
-            onClose();
+            payload?.action()
+            onClose()
           }}
         >
           Confirm
@@ -37,12 +37,12 @@ export function Confirm(props: Props) {
         <Button
           autoFocus
           onClick={() => {
-            onClose();
+            onClose()
           }}
         >
           Cancel
         </Button>
       </DialogActions>
     </Dialog>
-  );
+  )
 }

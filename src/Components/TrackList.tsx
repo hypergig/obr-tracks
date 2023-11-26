@@ -7,31 +7,31 @@ import {
   ListItem,
   Menu,
   MenuItem,
-} from "@mui/material";
-import Fuse from "fuse.js";
-import { useState } from "react";
-import { Virtuoso } from "react-virtuoso";
-import { ConfirmPayload } from "./Confirm";
-import { deleteTrackFromLibrary } from "../library";
-import { play } from "../mb";
-import { Track } from "../track";
+} from "@mui/material"
+import Fuse from "fuse.js"
+import { useState } from "react"
+import { Virtuoso } from "react-virtuoso"
+import { ConfirmPayload } from "./Confirm"
+import { deleteTrackFromLibrary } from "../library"
+import { play } from "../mb"
+import { Track } from "../track"
 
 interface TrackCardProps {
-  track: Track;
-  editTrack: (track: Track) => void;
-  confirm: (payload: ConfirmPayload) => void;
-  matches?: ReadonlyArray<Fuse.FuseResultMatch>;
+  track: Track
+  editTrack: (track: Track) => void
+  confirm: (payload: ConfirmPayload) => void
+  matches?: ReadonlyArray<Fuse.FuseResultMatch>
 }
 
 function TrackCard(props: TrackCardProps) {
-  const { track, editTrack, confirm, matches } = props;
+  const { track, editTrack, confirm, matches } = props
   const [contextMenu, setContextMenu] = useState<{
-    mouseX: number;
-    mouseY: number;
-  } | null>(null);
+    mouseX: number
+    mouseY: number
+  } | null>(null)
 
   const handleContextMenu = (event: React.MouseEvent) => {
-    event.preventDefault();
+    event.preventDefault()
     setContextMenu(
       contextMenu === null
         ? {
@@ -42,12 +42,12 @@ function TrackCard(props: TrackCardProps) {
           // Other native context menus might behave different.
           // With this behavior we prevent contextmenu from the backdrop to re-locale existing context menus.
           null,
-    );
-  };
+    )
+  }
 
   const handleClose = () => {
-    setContextMenu(null);
-  };
+    setContextMenu(null)
+  }
 
   return (
     <Card sx={{ minWidth: "100%" }} onContextMenu={handleContextMenu}>
@@ -89,8 +89,8 @@ function TrackCard(props: TrackCardProps) {
       >
         <MenuItem
           onClick={() => {
-            editTrack(track);
-            handleClose();
+            editTrack(track)
+            handleClose()
           }}
         >
           Edit
@@ -100,27 +100,27 @@ function TrackCard(props: TrackCardProps) {
             confirm({
               message: `This will delete ${track.title} from your library`,
               action: () => {
-                deleteTrackFromLibrary(track);
-                handleClose();
+                deleteTrackFromLibrary(track)
+                handleClose()
               },
-            });
+            })
           }}
         >
           Delete
         </MenuItem>
       </Menu>
     </Card>
-  );
+  )
 }
 
 interface Props {
-  searchResults: Fuse.FuseResult<Track>[];
-  editTrack: (track: Track) => void;
-  confirm: (payload: ConfirmPayload) => void;
+  searchResults: Fuse.FuseResult<Track>[]
+  editTrack: (track: Track) => void
+  confirm: (payload: ConfirmPayload) => void
 }
 
 export function TrackList(props: Props) {
-  const { editTrack, searchResults, confirm } = props;
+  const { editTrack, searchResults, confirm } = props
   return (
     <Virtuoso
       useWindowScroll
@@ -137,5 +137,5 @@ export function TrackList(props: Props) {
         </ListItem>
       )}
     />
-  );
+  )
 }

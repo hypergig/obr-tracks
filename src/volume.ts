@@ -1,20 +1,20 @@
-import { key } from "./key";
+import { key } from "./key"
 
-const path = key("volume");
-const fallback = 0.3;
+const path = key("volume")
+const fallback = 0.3
 
 export function getVolume(): number {
-  const data = localStorage.getItem(path) ?? "";
-  const volume = parseFloat(data);
+  const data = localStorage.getItem(path) ?? ""
+  const volume = parseFloat(data)
   if (Number.isNaN(volume) || volume > 1) {
-    return fallback;
+    return fallback
   }
-  return volume;
+  return volume
 }
 
 export function setVolume(volume: number) {
   if (volume > 1) {
-    return;
+    return
   }
-  localStorage.setItem(path, volume.toString());
+  localStorage.setItem(path, volume.toString())
 }

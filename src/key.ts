@@ -1,3 +1,3 @@
 export function key(path: string): string {
-  return `com.obr.tracks/${path}`;
+  return `com.obr.tracks/${path}`
 }

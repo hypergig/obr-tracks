@@ -4,17 +4,17 @@ import {
   useContext,
   useEffect,
   useState,
-} from "react";
-import { Message, onMessage } from "../mb";
+} from "react"
+import { Message, onMessage } from "../mb"
 
-const Context = createContext<Message | undefined>(undefined);
+const Context = createContext<Message | undefined>(undefined)
 
-export const useMessage = () => useContext(Context);
+export const useMessage = () => useContext(Context)
 
 export function MessageProvider({ children }: { children?: ReactNode }) {
-  const [message, setMessage] = useState<Message | undefined>(undefined);
+  const [message, setMessage] = useState<Message | undefined>(undefined)
   useEffect(() => {
-    return onMessage(setMessage);
-  }, []);
-  return <Context.Provider value={message}>{children}</Context.Provider>;
+    return onMessage(setMessage)
+  }, [])
+  return <Context.Provider value={message}>{children}</Context.Provider>
 }

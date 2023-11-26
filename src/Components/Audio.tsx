@@ -1,51 +1,50 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useMessage } from "./MessageProvider";
-import { TrackProgress } from "./TrackProgress";
-import { Action } from "../mb";
-import { convertGoogleDrive, getSeconds } from "../utils";
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useMessage } from "./MessageProvider"
+import { TrackProgress } from "./TrackProgress"
+import { Action } from "../mb"
+import { convertGoogleDrive, getSeconds } from "../utils"
 
 interface AudioProps {
-  ready: boolean;
-  volume: number;
-  mute: boolean;
+  ready: boolean
+  volume: number
+  mute: boolean
 }
 
 export function Audio(props: AudioProps) {
-  const { ready, volume, mute } = props;
-  const currentMessage = useMessage();
-  const [duration, setDuration] = useState<number | undefined>(undefined);
+  const { ready, volume, mute } = props
+  const currentMessage = useMessage()
+  const [duration, setDuration] = useState<number | undefined>(undefined)
 
-  const ref = useRef<HTMLAudioElement>(null);
+  const ref = useRef<HTMLAudioElement>(null)
 
   useEffect(() => {
     if (ref.current) {
-      ref.current.volume = volume;
+      ref.current.volume = volume
     }
-  }, [volume]);
+  }, [volume])
 
   useEffect(() => {
     if (ref.current && currentMessage && duration && ready) {
       switch (currentMessage.action) {
         case Action.Play:
           ref.current.currentTime =
-            (currentMessage.offset + getSeconds(currentMessage.time)) %
-            duration;
-          ref.current.paused && ref.current.play();
-          break;
+            (currentMessage.offset + getSeconds(currentMessage.time)) % duration
+          ref.current.paused && ref.current.play()
+          break
         case Action.Pause:
-          ref.current.currentTime = currentMessage.offset % duration;
-          ref.current.paused || ref.current.pause();
-          break;
+          ref.current.currentTime = currentMessage.offset % duration
+          ref.current.paused || ref.current.pause()
+          break
       }
     }
-  }, [ready, currentMessage, duration]);
+  }, [ready, currentMessage, duration])
 
   const url = useMemo(() => {
     if (currentMessage) {
-      return convertGoogleDrive(currentMessage.track.url);
+      return convertGoogleDrive(currentMessage.track.url)
     }
-    return "";
-  }, [currentMessage?.track.url]);
+    return ""
+  }, [currentMessage?.track.url])
 
   return (
     <>
@@ -59,10 +58,10 @@ export function Audio(props: AudioProps) {
         loop={true}
         muted={mute}
         onLoadedMetadata={(e) => {
-          setDuration((e.target as HTMLAudioElement).duration);
+          setDuration((e.target as HTMLAudioElement).duration)
         }}
       />
       <TrackProgress duration={duration} />
     </>
-  );
+  )
 }
