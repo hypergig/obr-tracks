@@ -27,9 +27,6 @@ import { VolumeSlider } from "./VolumeSlider";
 export function App() {
   const currentMessage = useMessage();
 
-  // theme
-  const theme = useTheme();
-
   // role
   const role = useRole();
 
