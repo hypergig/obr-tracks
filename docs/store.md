@@ -6,7 +6,6 @@ image: https://raw.githubusercontent.com/hypergig/obr-tracks/main/docs/header.pn
 icon: https://obr-tracks.web.app/tracks_256.png
 tags:
   - audio
-  - tool
 manifest: https://obr-tracks.web.app/manifest.json
 learn-more: https://github.com/hypergig/obr-tracks
 ---
