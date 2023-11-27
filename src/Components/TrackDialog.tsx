@@ -41,7 +41,7 @@ export function TrackDialog(props: Props) {
             value={title}
             variant="standard"
             label="Title"
-            onChange={e => setTitle(e.target.value)}
+            onChange={e => setTitle(e.target.value.trim())}
             type="text"
           />
           <TextField
@@ -50,14 +50,14 @@ export function TrackDialog(props: Props) {
             disabled={track !== undefined && track !== null}
             variant="standard"
             label="Url"
-            onChange={e => setUrl(e.target.value)}
+            onChange={e => setUrl(e.target.value.trim())}
             type="url"
           />
           <Autocomplete
             value={tags}
             multiple
             freeSolo
-            onChange={(_, v) => setTags(v)}
+            onChange={(_, v) => setTags(v.map(tag => tag.trim()))}
             options={tagSuggestions}
             renderTags={(value: readonly string[], getTagProps) =>
               value.map((option: string, index: number) => (

@@ -32,6 +32,10 @@ export function mergeLibrary(tracks: Track[]) {
   tracks.forEach(t => {
     let updated = false
     currentLibrary.forEach(currentTrack => {
+      t.title = t.title.trim()
+      t.url = t.url.trim()
+      t.tags = t.tags.map(tag => tag.trim())
+
       if (currentTrack.url === t.url) {
         currentTrack.title = t.title
         currentTrack.tags = t.tags
