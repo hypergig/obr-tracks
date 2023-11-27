@@ -42,7 +42,7 @@ export function TrackSearch(props: Props) {
       fullWidth={true}
       type={"search"}
       value={value}
-      onChange={(e) => {
+      onChange={e => {
         setValue(e.target.value)
 
         // on empty, reset the list
@@ -54,8 +54,8 @@ export function TrackSearch(props: Props) {
         // build a list of terms, filtering out blanks
         const terms = e.target.value
           .split(" ")
-          .filter((e) => e)
-          .map((e) => {
+          .filter(e => e)
+          .map(e => {
             return { tags: e }
           })
 

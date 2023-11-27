@@ -17,7 +17,7 @@ export function csvToTracks(text: string): Track[] {
   if (results.errors.length != 0) {
     throw new ObrError("CsvError", results.errors)
   }
-  return results.data.map((r) => ({
+  return results.data.map(r => ({
     title: r.title,
     url: r.url,
     tags: r.tags.split(tagDelimiter),
@@ -26,7 +26,7 @@ export function csvToTracks(text: string): Track[] {
 
 export function TracksToCsv(tracks: Track[]): string {
   return Papa.unparse<Row>(
-    tracks.map<Row>((r) => ({
+    tracks.map<Row>(r => ({
       title: r.title,
       url: r.url,
       tags: r.tags.join(tagDelimiter),

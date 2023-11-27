@@ -42,7 +42,7 @@ export function App() {
 
   // tag suggestions state for track dialog
   const tagSuggestions = useMemo<string[]>(() => {
-    return [...new Set(trackLibrary.flatMap((track) => track.tags))]
+    return [...new Set(trackLibrary.flatMap(track => track.tags))]
   }, [trackLibrary])
 
   // track dialog state

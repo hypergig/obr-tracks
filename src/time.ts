@@ -11,7 +11,7 @@ export function setSkew(callback: () => void) {
   OBR.onReady(() => {
     const o = location.origin
     console.log("fetching time from", o)
-    fetch(o, { cache: "no-store" }).then((r) => {
+    fetch(o, { cache: "no-store" }).then(r => {
       // get the now time as soon as possible after the fetch
       const now = new Date()
 

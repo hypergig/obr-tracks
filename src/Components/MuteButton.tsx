@@ -18,7 +18,7 @@ export function MuteButton(props: Props) {
   return (
     <IconButton
       onClick={() => {
-        setMute((m) => !m)
+        setMute(m => !m)
       }}
     >
       {mute ? (

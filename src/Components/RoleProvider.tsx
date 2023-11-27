@@ -29,7 +29,7 @@ export function RoleProvider({ children }: { children?: ReactNode }) {
     const handlePlayerChange = (player: Player) => {
       setRole(stringToRole(player.role))
     }
-    OBR.player.getRole().then((r) => setRole(stringToRole(r)))
+    OBR.player.getRole().then(r => setRole(stringToRole(r)))
     return OBR.player.onChange(handlePlayerChange)
   }, [])
   return <RoleContext.Provider value={role}>{children}</RoleContext.Provider>

@@ -41,7 +41,7 @@ export function TrackDialog(props: Props) {
             value={title}
             variant="standard"
             label="Title"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={e => setTitle(e.target.value)}
             type="text"
           />
           <TextField
@@ -50,7 +50,7 @@ export function TrackDialog(props: Props) {
             disabled={track !== undefined && track !== null}
             variant="standard"
             label="Url"
-            onChange={(e) => setUrl(e.target.value)}
+            onChange={e => setUrl(e.target.value)}
             type="url"
           />
           <Autocomplete
@@ -68,7 +68,7 @@ export function TrackDialog(props: Props) {
                 />
               ))
             }
-            renderInput={(params) => (
+            renderInput={params => (
               <TextField {...params} variant="standard" label="Tags" />
             )}
           />

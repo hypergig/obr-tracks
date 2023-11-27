@@ -56,7 +56,7 @@ function TrackCard(props: TrackCardProps) {
           subheader={track.title}
           subheaderTypographyProps={{
             color: matches?.find(
-              (m) => m.key === "title" && m.value === track.title,
+              m => m.key === "title" && m.value === track.title,
             )
               ? "secondary"
               : undefined,
@@ -69,7 +69,7 @@ function TrackCard(props: TrackCardProps) {
               variant="outlined"
               label={t}
               color={
-                matches?.find((m) => m.key === "tags" && m.refIndex === i)
+                matches?.find(m => m.key === "tags" && m.refIndex === i)
                   ? "secondary"
                   : undefined
               }

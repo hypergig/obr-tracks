@@ -29,7 +29,7 @@ const importButton = () => {
     if (input.files?.length !== 1) {
       throw new ObrError("missingCsvFile", "must select at least 1 csv file")
     }
-    input.files[0].text().then((t) => {
+    input.files[0].text().then(t => {
       const tracks = csvToTracks(t)
       logEvent(analytics, "import", { count: tracks.length })
       mergeLibrary(tracks)

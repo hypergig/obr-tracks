@@ -23,15 +23,15 @@ export function addTrackToLibrary(track: Track) {
 
 export function deleteTrackFromLibrary(track: Track) {
   logEvent(analytics, "delete_track")
-  set(getLibrary().filter((t) => t.url !== track.url))
+  set(getLibrary().filter(t => t.url !== track.url))
 }
 
 export function mergeLibrary(tracks: Track[]) {
   const currentLibrary = getLibrary()
   const newTracks: Track[] = []
-  tracks.forEach((t) => {
+  tracks.forEach(t => {
     let updated = false
-    currentLibrary.forEach((currentTrack) => {
+    currentLibrary.forEach(currentTrack => {
       if (currentTrack.url === t.url) {
         currentTrack.title = t.title
         currentTrack.tags = t.tags

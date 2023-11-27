@@ -57,7 +57,7 @@ export function Audio(props: AudioProps) {
         controls={false}
         loop={true}
         muted={mute}
-        onLoadedMetadata={(e) => {
+        onLoadedMetadata={e => {
           setDuration((e.target as HTMLAudioElement).duration)
         }}
       />
