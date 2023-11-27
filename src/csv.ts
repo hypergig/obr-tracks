@@ -20,7 +20,7 @@ export function csvToTracks(text: string): Track[] {
   return results.data.map(r => ({
     title: r.title,
     url: r.url,
-    tags: r.tags.split(tagDelimiter),
+    tags: r.tags === "" ? [] : r.tags.split(tagDelimiter),
   }))
 }
 

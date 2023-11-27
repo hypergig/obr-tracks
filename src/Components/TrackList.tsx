@@ -49,6 +49,19 @@ function TrackCard(props: TrackCardProps) {
     setContextMenu(null)
   }
 
+  const chips = track.tags.map((t, i) => (
+    <Chip
+      key={i}
+      variant="outlined"
+      label={t}
+      color={
+        matches?.find(m => m.key === "tags" && m.refIndex === i)
+          ? "secondary"
+          : undefined
+      }
+    />
+  ))
+
   return (
     <Card sx={{ minWidth: "100%" }} onContextMenu={handleContextMenu}>
       <CardActionArea disableRipple={false} onClick={() => play(track)}>
@@ -62,20 +75,7 @@ function TrackCard(props: TrackCardProps) {
               : undefined,
           }}
         />
-        <CardContent>
-          {track.tags.map((t, i) => (
-            <Chip
-              key={i}
-              variant="outlined"
-              label={t}
-              color={
-                matches?.find(m => m.key === "tags" && m.refIndex === i)
-                  ? "secondary"
-                  : undefined
-              }
-            />
-          ))}
-        </CardContent>
+        {chips.length > 0 && <CardContent>{chips}</CardContent>}
       </CardActionArea>
       <Menu
         open={contextMenu !== null}
