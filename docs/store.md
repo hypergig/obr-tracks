@@ -83,7 +83,7 @@ Fill in a descriptive **title**, publicly accessible **URL**, attach a bunch of 
 
 #### Having trouble filling up your library?
 
-Just ask for some help on [discord](https://discord.com/channels/795808973743194152/1082460044731371591) and a community member will be happy to share an importable CSV of their library with you. This is the quickest way to get started.
+Just ask for some help on [discord](https://discord.gg/u5RYMkV98s) and a community member will be happy to share an importable CSV of their library with you. This is the quickest way to get started.
 
 ### CSV
 
@@ -128,4 +128,4 @@ You can **Edit** and **Delete** tracks via the track context menu (ie, right cli
 
 ## Support
 
-The best way to get support is to ping me **`Jordan`** in [discord](https://discord.com/channels/795808973743194152/1082460044731371591). If that doesn't work for you, you can also email me at [hypergig@gmail.com](mailto:hypergig@gmail.com).
+The best way to get support is to ping me **`Jordan`** in [discord](https://discord.gg/u5RYMkV98s). If that doesn't work for you, you can also email me at [hypergig@gmail.com](mailto:hypergig@gmail.com).

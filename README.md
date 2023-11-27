@@ -14,4 +14,4 @@ Check out the [store docs](docs/store.md)
 
 ## Contribute
 
-Sure! But reach out to me on [discord](https://discord.com/channels/795808973743194152/1082460044731371591) if you are thinking about large changes.
+Sure! But reach out to me on [discord](https://discord.gg/u5RYMkV98s) if you are thinking about large changes.
