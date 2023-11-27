@@ -16,6 +16,13 @@ function set(tracks: Track[]) {
   push()
 }
 
+function trimTrack(track: Track) {
+  track.title = track.title.trim()
+  track.url = track.url.trim()
+  track.tags = track.tags.map(tag => tag.trim())
+  return track
+}
+
 export function addTrackToLibrary(track: Track) {
   logEvent(analytics, "add_track")
   mergeLibrary([track])
@@ -32,9 +39,7 @@ export function mergeLibrary(tracks: Track[]) {
   tracks.forEach(t => {
     let updated = false
     currentLibrary.forEach(currentTrack => {
-      t.title = t.title.trim()
-      t.url = t.url.trim()
-      t.tags = t.tags.map(tag => tag.trim())
+      t = trimTrack(t)
 
       if (currentTrack.url === t.url) {
         currentTrack.title = t.title
@@ -51,7 +56,7 @@ export function mergeLibrary(tracks: Track[]) {
 }
 
 export function getLibrary(): Track[] {
-  return JSON.parse(localStorage.getItem(path) ?? "[]")
+  return JSON.parse(localStorage.getItem(path) ?? "[]").map(trimTrack)
 }
 
 export function clearLibrary() {
@@ -66,4 +71,9 @@ export function onLibraryChange(
   callback(getLibrary())
   eventEmitter.addListener(path, callback)
   return () => eventEmitter.removeListener(path, callback)
+}
+
+// remove all the leading and trailing whitespace from the every track in the library
+export function cleanLibrary() {
+  set(getLibrary())
 }

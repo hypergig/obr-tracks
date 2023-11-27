@@ -6,7 +6,11 @@ import { PluginGate } from "./Components/PluginGate"
 import { PluginThemeProvider } from "./Components/PluginThemeProvider"
 import { RoleProvider } from "./Components/RoleProvider"
 import "./firebase"
+import { cleanLibrary } from "./library"
 import { setSkew } from "./time"
+
+// clean the library before starting the app
+cleanLibrary()
 
 setSkew(() =>
   ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
