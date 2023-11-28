@@ -35,3 +35,24 @@ export function convertGoogleDrive(driveUrl: string): string {
 
   return driveUrl
 }
+
+export function validateTitle(title: string): string {
+  if (title === "") {
+    return "Title can not be blank"
+  }
+  return ""
+}
+
+export function validateUrl(url: string): string {
+  try {
+    new URL(url)
+  } catch {
+    return "Invalid url"
+  }
+
+  if (!url.endsWith(".mp3")) {
+    return "Url must be of an mp3 file"
+  }
+
+  return ""
+}

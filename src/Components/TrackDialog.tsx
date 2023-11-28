@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from "react"
 import { addTrackToLibrary } from "../library"
 import { Track } from "../track"
+import { validateTitle, validateUrl } from "../utils"
 
 interface Props {
   onClose: () => void
@@ -21,9 +22,27 @@ interface Props {
 
 export function TrackDialog(props: Props) {
   const { onClose, tagSuggestions, track } = props
+
+  // TODO - move this into a reducer
   const [title, setTitle] = useState<string>("")
+  const [titleError, setTitleError] = useState<string>("")
+
   const [url, setUrl] = useState<string>("")
+  const [urlError, setUrlError] = useState<string>("")
+
   const [tags, setTags] = useState<string[]>([])
+
+  const handleClose = () => {
+    setTitle("")
+    setTitleError("")
+
+    setUrl("")
+    setUrlError("")
+
+    setTags([])
+
+    onClose()
+  }
 
   useEffect(() => {
     setTitle(track?.title ?? "")
@@ -32,11 +51,13 @@ export function TrackDialog(props: Props) {
   }, [track])
 
   return (
-    <Dialog fullWidth open={track !== null} onClose={onClose}>
+    <Dialog fullWidth open={track !== null} onClose={handleClose}>
       <DialogTitle>{track ? "Edit Track" : "New Track"}</DialogTitle>
       <DialogContent>
         <Stack spacing={4}>
           <TextField
+            error={titleError !== ""}
+            helperText={titleError}
             autoComplete="off"
             value={title}
             variant="standard"
@@ -45,6 +66,8 @@ export function TrackDialog(props: Props) {
             type="text"
           />
           <TextField
+            error={urlError !== ""}
+            helperText={urlError}
             autoComplete="off"
             value={url}
             disabled={track !== undefined && track !== null}
@@ -77,13 +100,22 @@ export function TrackDialog(props: Props) {
       <DialogActions>
         <Button
           onClick={() => {
-            addTrackToLibrary({ title: title, url: url, tags: tags })
-            onClose()
+            const t = validateTitle(title)
+            const u = validateUrl(url)
+            if (t !== "" || u !== "") {
+              setTitleError(t)
+              setUrlError(u)
+            } else {
+              setTitle(v => v.trim())
+              setUrl(v => v.trim())
+              addTrackToLibrary({ title: title, url: url, tags: tags })
+              handleClose()
+            }
           }}
         >
           Save
         </Button>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleClose}>Cancel</Button>
       </DialogActions>
     </Dialog>
   )
