@@ -50,7 +50,7 @@ export function TrackDialog(props: Props) {
             disabled={track !== undefined && track !== null}
             variant="standard"
             label="Url"
-            onChange={e => setUrl(e.target.value)}
+            onChange={e => setUrl(e.target.value.trim())}
             type="url"
           />
           <Autocomplete
