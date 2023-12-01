@@ -54,13 +54,7 @@ export function mergeLibrary(tracks: Track[]) {
 }
 
 export function getLibrary(): Track[] {
-  return JSON.parse(localStorage.getItem(path) ?? "[]").map((t: Track) => {
-    const { fixed, validation } = checkTrack(t)
-    if (validation) {
-      console.warn(`Bad track in library, you should probably delete it: ${Object.values(validation).filter(e => e).join(", ")}`, fixed)
-    }
-    return fixed
-  })
+  return JSON.parse(localStorage.getItem(path) ?? "[]").map((t: Track) => t)
 }
 
 export function clearLibrary() {
@@ -77,7 +71,13 @@ export function onLibraryChange(
   return () => eventEmitter.removeListener(path, callback)
 }
 
-// remove all the leading and trailing whitespace from the every track in the library
+// clean the library
 export function cleanLibrary() {
-  set(getLibrary())
+  set(getLibrary().map(t => {
+    const { fixed, validation } = checkTrack(t)
+    if (validation) {
+      console.warn(`Bad track in library, you should probably delete it: ${Object.values(validation).filter(e => e).join(", ")}`, fixed)
+    }
+    return fixed
+  }))
 }
