@@ -31,18 +31,17 @@ export function convertGoogleDrive(driveUrl: string): string {
   return driveUrl
 }
 
-export interface CheckResult<Type> {
-  fixed: Type
-  validation: string
+export interface CheckResult<F, V> {
+  fixed: F
+  validation?: V
 }
 
-export function checkTitle(title: string): CheckResult<string> {
+export function checkTitle(title: string): CheckResult<string, string> {
   const fixed = title.trim()
-  const validation = fixed || "Title can not be blank"
-  return { fixed, validation }
+  return { fixed, validation: fixed ? undefined : "Title can not be blank" }
 }
 
-export function checkUrl(url: string): CheckResult<string> {
+export function checkUrl(url: string): CheckResult<string, string> {
   const fixed = url.trim()
 
   try {
@@ -55,20 +54,20 @@ export function checkUrl(url: string): CheckResult<string> {
     return { fixed, validation: "Url must be of an mp3 file" }
   }
 
-  return { fixed, validation: "" }
+  return { fixed }
 }
 
-export function checkTags(tags: string[]): CheckResult<string[]> {
-  return { fixed: tags.filter(t => t).map(t => t.trim()), validation: "" }
+export function checkTags(tags: string[]): CheckResult<string[], string> {
+  return { fixed: tags.filter(t => t).map(t => t.trim()) }
 }
 
-export function checkTrack(track: Track): CheckResult<Track> {
+export function checkTrack(track: Track): CheckResult<Track, { titleValidation?: string, urlValidation?: string, tagsValidation?: string } | undefined> {
   const { fixed: title, validation: titleValidation } = checkTitle(track.title)
   const { fixed: url, validation: urlValidation } = checkUrl(track.url)
   const { fixed: tags, validation: tagsValidation } = checkTags(track.tags)
 
   return {
     fixed: { title, url, tags },
-    validation: [titleValidation, urlValidation, tagsValidation].join(",")
+    validation: titleValidation || urlValidation || tagsValidation ? { titleValidation, urlValidation, tagsValidation } : undefined
   }
 }

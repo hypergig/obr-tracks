@@ -9,10 +9,10 @@ import {
   Stack,
   TextField,
 } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useEffect, useReducer } from "react"
 import { addTrackToLibrary } from "../library"
 import { Track } from "../track"
-import { validateTitle, validateUrl } from "../utils"
+import { checkTitle, checkTrack, checkUrl } from "../utils"
 
 interface Props {
   onClose: () => void
@@ -20,67 +20,172 @@ interface Props {
   track?: Track | null
 }
 
+interface State {
+  track: Track
+  titleError?: string
+  urlError?: string
+  readyToSave: boolean
+}
+
+enum ActionType {
+  setTitle,
+  checkTitle,
+  setUrl,
+  checkUrl,
+  setTags,
+  setTrack,
+  checkReadyToSave,
+}
+
+type Action =
+  | { type: ActionType.setTitle; payload: string }
+  | { type: ActionType.checkTitle }
+  | { type: ActionType.setUrl; payload: string }
+  | { type: ActionType.checkUrl }
+  | { type: ActionType.setTags; payload: string[] }
+  | { type: ActionType.setTrack; payload: Track }
+  | { type: ActionType.checkReadyToSave }
+
+function reducer(state: State, action: Action): State {
+  const { type } = action
+  switch (type) {
+    case ActionType.setTitle:
+      return {
+        ...state,
+        track: {
+          ...state.track,
+          title: action.payload,
+        },
+        readyToSave: false,
+      }
+    case ActionType.checkTitle: {
+      const { fixed, validation } = checkTitle(state.track.title)
+      return {
+        ...state,
+        titleError: validation,
+        track: {
+          ...state.track,
+          title: fixed,
+        },
+        readyToSave: false,
+      }
+    }
+    case ActionType.setUrl:
+      return {
+        ...state,
+        track: {
+          ...state.track,
+          url: action.payload,
+        },
+      }
+    case ActionType.checkUrl: {
+      const { fixed, validation } = checkUrl(state.track.url)
+      return {
+        ...state,
+        urlError: validation,
+        track: {
+          ...state.track,
+          url: fixed,
+        },
+        readyToSave: false,
+      }
+    }
+    case ActionType.setTags:
+      return {
+        ...state,
+        track: {
+          ...state.track,
+          tags: action.payload,
+        },
+        readyToSave: false,
+      }
+    case ActionType.setTrack: {
+      const { fixed, validation } = checkTrack(action.payload)
+      return {
+        ...state,
+        titleError: validation?.titleValidation,
+        urlError: validation?.urlValidation,
+        track: fixed,
+        readyToSave: false,
+      }
+    }
+    case ActionType.checkReadyToSave:
+      const { fixed, validation } = checkTrack(state.track)
+      return {
+        ...state,
+        titleError: validation?.titleValidation,
+        urlError: validation?.urlValidation,
+        track: fixed,
+        readyToSave: validation === undefined,
+      }
+    default:
+      throw new Error("unknown reducer action")
+  }
+}
+
 export function TrackDialog(props: Props) {
   const { onClose, tagSuggestions, track } = props
 
-  // TODO - move this into a reducer
-  const [title, setTitle] = useState<string>("")
-  const [titleError, setTitleError] = useState<string>("")
-
-  const [url, setUrl] = useState<string>("")
-  const [urlError, setUrlError] = useState<string>("")
-
-  const [tags, setTags] = useState<string[]>([])
-
-  const handleClose = () => {
-    setTitle("")
-    setTitleError("")
-
-    setUrl("")
-    setUrlError("")
-
-    setTags([])
-
-    onClose()
-  }
-
+  const [state, dispatch] = useReducer(reducer, {
+    track: {
+      title: "",
+      url: "",
+      tags: [],
+    },
+    readyToSave: false,
+  })
   useEffect(() => {
-    setTitle(track?.title ?? "")
-    setUrl(track?.url ?? "")
-    setTags(track?.tags ?? [])
+    if (track) {
+      dispatch({ type: ActionType.setTrack, payload: track })
+    }
   }, [track])
 
+  useEffect(() => {
+    if (state.readyToSave) {
+      addTrackToLibrary(state.track)
+      onClose()
+    }
+  }, [state.readyToSave])
+
   return (
-    <Dialog fullWidth open={track !== null} onClose={handleClose}>
+    <Dialog fullWidth open={track !== null} onClose={onClose}>
       <DialogTitle>{track ? "Edit Track" : "New Track"}</DialogTitle>
       <DialogContent>
         <Stack spacing={4}>
           <TextField
-            error={titleError !== ""}
-            helperText={titleError}
+            error={state.titleError !== undefined}
+            helperText={state.titleError}
             autoComplete="off"
-            value={title}
+            value={state.track.title}
             variant="standard"
             label="Title"
-            onChange={e => setTitle(e.target.value)}
+            onBlur={() => dispatch({ type: ActionType.checkTitle })}
+            onChange={e =>
+              dispatch({ type: ActionType.setTitle, payload: e.target.value })
+            }
             type="text"
           />
           <TextField
-            error={urlError !== ""}
-            helperText={urlError}
+            error={state.urlError !== undefined}
+            helperText={state.urlError}
             autoComplete="off"
-            value={url}
+            value={state.track.url}
             disabled={track !== undefined && track !== null}
             variant="standard"
             label="Url"
-            onChange={e => setUrl(e.target.value.trim())}
+            onBlur={() => dispatch({ type: ActionType.checkUrl })}
+            onChange={e =>
+              dispatch({ type: ActionType.setUrl, payload: e.target.value })
+            }
             type="url"
           />
           <Autocomplete
-            value={tags}
+            value={state.track.tags}
             multiple
             freeSolo
-            onChange={(_, v) => setTags(v)}
+            onChange={(_, v) =>
+              dispatch({ type: ActionType.setTags, payload: v })
+            }
             options={tagSuggestions}
             renderTags={(value: readonly string[], getTagProps) =>
               value.map((option: string, index: number) => (
@@ -100,22 +205,12 @@ export function TrackDialog(props: Props) {
       <DialogActions>
         <Button
           onClick={() => {
-            const t = validateTitle(title)
-            const u = validateUrl(url)
-            if (t !== "" || u !== "") {
-              setTitleError(t)
-              setUrlError(u)
-            } else {
-              setTitle(v => v.trim())
-              setUrl(v => v.trim())
-              addTrackToLibrary({ title: title, url: url, tags: tags })
-              handleClose()
-            }
+            dispatch({ type: ActionType.checkReadyToSave })
           }}
         >
           Save
         </Button>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={onClose}>Cancel</Button>
       </DialogActions>
     </Dialog>
   )
