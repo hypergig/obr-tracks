@@ -1,8 +1,10 @@
 import { EventEmitter } from "events"
 import { logEvent } from "firebase/analytics"
+import { ObrError } from "./errors"
 import { analytics } from "./firebase"
 import { key } from "./key"
 import { Track } from "./track"
+import { checkTrack } from "./utils"
 
 const path = key("library")
 const eventEmitter = new EventEmitter()
@@ -14,13 +16,6 @@ function push() {
 function set(tracks: Track[]) {
   localStorage.setItem(path, JSON.stringify(tracks))
   push()
-}
-
-function trimTrack(track: Track) {
-  track.title = track.title.trim()
-  track.url = track.url.trim()
-  track.tags = track.tags.map(tag => tag.trim())
-  return track
 }
 
 export function addTrackToLibrary(track: Track) {
@@ -39,11 +34,14 @@ export function mergeLibrary(tracks: Track[]) {
   tracks.forEach(t => {
     let updated = false
     currentLibrary.forEach(currentTrack => {
-      t = trimTrack(t)
+      const { fixed, validation } = checkTrack(t)
+      if (validation) {
+        throw new ObrError(validation, fixed)
+      }
 
-      if (currentTrack.url === t.url) {
-        currentTrack.title = t.title
-        currentTrack.tags = t.tags
+      if (currentTrack.url === fixed.url) {
+        currentTrack.title = fixed.title
+        currentTrack.tags = fixed.tags
         updated = true
       }
     })
@@ -56,7 +54,13 @@ export function mergeLibrary(tracks: Track[]) {
 }
 
 export function getLibrary(): Track[] {
-  return JSON.parse(localStorage.getItem(path) ?? "[]").map(trimTrack)
+  return JSON.parse(localStorage.getItem(path) ?? "[]").map((t: Track) => {
+    const { fixed, validation } = checkTrack(t)
+    if (validation) {
+      console.warn(`bad track in library: ${validation}`, fixed)
+    }
+    return fixed
+  })
 }
 
 export function clearLibrary() {
