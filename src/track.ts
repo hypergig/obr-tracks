@@ -3,3 +3,9 @@ export interface Track {
   url: string
   tags: string[]
 }
+
+export const emptyTrack: Track = {
+  title: "",
+  url: "",
+  tags: []
+}

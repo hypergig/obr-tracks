@@ -11,7 +11,7 @@ import {
 } from "@mui/material"
 import { useEffect, useReducer } from "react"
 import { addTrackToLibrary } from "../library"
-import { Track } from "../track"
+import { Track, emptyTrack } from "../track"
 import { checkTitle, checkTrack, checkUrl } from "../utils"
 
 interface Props {
@@ -99,16 +99,14 @@ function reducer(state: State, action: Action): State {
         },
         readyToSave: false,
       }
-    case ActionType.setTrack: {
-      const { fixed, validation } = checkTrack(action.payload)
+    case ActionType.setTrack:
       return {
         ...state,
-        titleError: validation?.titleValidation,
-        urlError: validation?.urlValidation,
-        track: fixed,
+        titleError: undefined,
+        urlError: undefined,
+        track: action.payload,
         readyToSave: false,
       }
-    }
     case ActionType.checkReadyToSave:
       const { fixed, validation } = checkTrack(state.track)
       return {
@@ -127,17 +125,12 @@ export function TrackDialog(props: Props) {
   const { onClose, tagSuggestions, track } = props
 
   const [state, dispatch] = useReducer(reducer, {
-    track: {
-      title: "",
-      url: "",
-      tags: [],
-    },
+    track: emptyTrack,
     readyToSave: false,
   })
+
   useEffect(() => {
-    if (track) {
-      dispatch({ type: ActionType.setTrack, payload: track })
-    }
+    dispatch({ type: ActionType.setTrack, payload: track ?? emptyTrack })
   }, [track])
 
   useEffect(() => {
