@@ -14,13 +14,15 @@ import {
 } from "@mui/material"
 import { logEvent } from "firebase/analytics"
 import { useState } from "react"
-import { ConfirmPayload } from "./Confirm"
 import { TracksToCsv, csvToTracks } from "../csv"
 import { ObrError } from "../errors"
 import { analytics } from "../firebase"
 import { clearLibrary, getLibrary, mergeLibrary } from "../library"
+import { checkTrack } from "../utils"
+import { ConfirmPayload } from "./Confirm"
+import { CsvError, CsvErrors } from "./CsvErrors"
 
-const importButton = () => {
+const importButton = (setErrors: (errors: CsvError[]) => void) => {
   const input = document.createElement("input")
   input.type = "file"
   input.accept = "text/csv"
@@ -32,7 +34,21 @@ const importButton = () => {
     input.files[0].text().then(t => {
       const tracks = csvToTracks(t)
       logEvent(analytics, "import", { count: tracks.length })
-      mergeLibrary(tracks)
+
+      const errors = tracks.reduce<CsvError[]>((result, t, row) => {
+        const { validation } = checkTrack(t)
+        if (validation) {
+          row++
+          result.push({ row, validation })
+        }
+        return result
+      }, [])
+
+      if (errors.length !== 0) {
+        setErrors(errors)
+      } else {
+        mergeLibrary(tracks)
+      }
     })
   }
   input.click()
@@ -64,6 +80,8 @@ export function IconMenu(props: Props) {
     setAnchorEl(null)
   }
 
+  const [csvErrors, setCsvErrors] = useState<CsvError[]>([])
+
   const theme = useTheme()
   return (
     <>
@@ -93,7 +111,7 @@ export function IconMenu(props: Props) {
           <MenuItem
             onClick={() => {
               handleClose()
-              importButton()
+              importButton(setCsvErrors)
             }}
           >
             <ListItemIcon>
@@ -132,6 +150,7 @@ export function IconMenu(props: Props) {
           </MenuItem>
         </MenuList>
       </Menu>
+      <CsvErrors errors={csvErrors} onClose={() => setCsvErrors([])} />
     </>
   )
 }

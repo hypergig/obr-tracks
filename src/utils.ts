@@ -61,7 +61,13 @@ export function checkTags(tags: string[]): CheckResult<string[], string> {
   return { fixed: tags.filter(t => t).map(t => t.trim()) }
 }
 
-export function checkTrack(track: Track): CheckResult<Track, { titleValidation?: string, urlValidation?: string, tagsValidation?: string } | undefined> {
+export interface TrackValidation {
+  titleValidation?: string
+  urlValidation?: string
+  tagsValidation?: string
+}
+
+export function checkTrack(track: Track): CheckResult<Track, TrackValidation | undefined> {
   const { fixed: title, validation: titleValidation } = checkTitle(track.title)
   const { fixed: url, validation: urlValidation } = checkUrl(track.url)
   const { fixed: tags, validation: tagsValidation } = checkTags(track.tags)
