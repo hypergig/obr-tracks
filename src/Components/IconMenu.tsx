@@ -14,13 +14,12 @@ import {
 } from "@mui/material"
 import { logEvent } from "firebase/analytics"
 import { useState } from "react"
-import { TracksToCsv, csvToTracks } from "../csv"
+import { CsvError, TracksToCsv, csvToTracks } from "../csv"
 import { ObrError } from "../errors"
 import { analytics } from "../firebase"
 import { clearLibrary, getLibrary, mergeLibrary } from "../library"
-import { checkTrack } from "../utils"
 import { ConfirmPayload } from "./Confirm"
-import { CsvError, CsvErrors } from "./CsvErrors"
+import { CsvErrors } from "./CsvErrors"
 
 const importButton = (setErrors: (errors: CsvError[]) => void) => {
   const input = document.createElement("input")
@@ -32,17 +31,7 @@ const importButton = (setErrors: (errors: CsvError[]) => void) => {
       throw new ObrError("missingCsvFile", "must select at least 1 csv file")
     }
     input.files[0].text().then(t => {
-      const tracks = csvToTracks(t)
-      logEvent(analytics, "import", { count: tracks.length })
-
-      const errors = tracks.reduce<CsvError[]>((result, t, row) => {
-        const { validation } = checkTrack(t)
-        if (validation) {
-          row++
-          result.push({ row, validation })
-        }
-        return result
-      }, [])
+      const { tracks, errors } = csvToTracks(t)
 
       if (errors.length !== 0) {
         setErrors(errors)

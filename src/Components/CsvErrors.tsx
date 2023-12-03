@@ -14,12 +14,7 @@ import {
   useTheme,
 } from "@mui/material"
 import { Stack } from "@mui/system"
-import { TrackValidation } from "../utils"
-
-export interface CsvError {
-  row: number
-  validation: TrackValidation
-}
+import { CsvError } from "../csv"
 
 interface Props {
   errors: CsvError[]
