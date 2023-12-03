@@ -7,5 +7,5 @@ export interface Track {
 export const emptyTrack: Track = {
   title: "",
   url: "",
-  tags: []
+  tags: [],
 }

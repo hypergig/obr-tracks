@@ -36,7 +36,12 @@ export function mergeLibrary(tracks: Track[]) {
     currentLibrary.forEach(currentTrack => {
       const { fixed, validation } = checkTrack(t)
       if (validation) {
-        throw new ObrError(Object.values(validation).filter(e => e).join(", "), fixed)
+        throw new ObrError(
+          Object.values(validation)
+            .filter(e => e)
+            .join(", "),
+          fixed,
+        )
       }
 
       if (currentTrack.url === fixed.url) {
@@ -73,11 +78,20 @@ export function onLibraryChange(
 
 // clean the library
 export function cleanLibrary() {
-  set(getLibrary().map(t => {
-    const { fixed, validation } = checkTrack(t)
-    if (validation) {
-      console.warn(`Bad track in library, you should probably delete it: ${Object.values(validation).filter(e => e).join(", ")}`, fixed)
-    }
-    return fixed
-  }))
+  set(
+    getLibrary().map(t => {
+      const { fixed, validation } = checkTrack(t)
+      if (validation) {
+        console.warn(
+          `Bad track in library, you should probably delete it: ${Object.values(
+            validation,
+          )
+            .filter(e => e)
+            .join(", ")}`,
+          fixed,
+        )
+      }
+      return fixed
+    }),
+  )
 }

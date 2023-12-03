@@ -6,10 +6,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  List,
+  ListItem,
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableRow,
   useTheme,
 } from "@mui/material"
@@ -34,53 +35,44 @@ export function CsvErrors(props: Props) {
       </DialogTitle>
       <DialogContent sx={{ overflowY: "unset" }}>
         <DialogContentText variant="subtitle2">
-          The following rows have errors which prevent importing. Please fix
-          them and try again.
+          The following <b>rows numbers</b> have errors which prevent importing.
+          Please fix them and try again.
         </DialogContentText>
       </DialogContent>
       <DialogContent
         sx={{
-          overflowY: "unset",
           paddingY: 0,
           backgroundColor: theme.palette.background.paper,
         }}
       >
-        <Table sx={{ minWidth: "100%" }}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Row</TableCell>
-              <TableCell align="right">Errors</TableCell>
-            </TableRow>
-          </TableHead>
-        </Table>
-      </DialogContent>
-      <DialogContent
-        sx={{
-          paddingY: 0,
-          backgroundColor: theme.palette.background.paper,
-        }}
-      >
-        {/* <TableContainer component={Paper}> */}
         <Table sx={{ minWidth: "100%" }}>
           <TableBody>
-            {errors.map(row => (
+            {errors.map(e => (
               <TableRow
-                key={row.row}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                key={e.row}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                }}
               >
-                <TableCell>{row.row}</TableCell>
-                <TableCell align="right">
-                  {Object.values(row.validation)
-                    .filter(v => v)
-                    .map(v => (
-                      <div key={v}>{v}</div>
-                    ))}
+                <TableCell padding="checkbox">{e.row}</TableCell>
+                <TableCell>
+                  <List sx={{ listStyleType: "disc" }}>
+                    {Object.values(e.errors)
+                      .filter(v => v)
+                      .map((v, i) => (
+                        <ListItem
+                          key={i}
+                          sx={{ display: "list-item", padding: 0 }}
+                        >
+                          {v}
+                        </ListItem>
+                      ))}
+                  </List>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        {/* </TableContainer> */}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Ok</Button>

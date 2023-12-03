@@ -33,7 +33,7 @@ const importButton = (setErrors: (errors: CsvError[]) => void) => {
     input.files[0].text().then(t => {
       const { tracks, errors } = csvToTracks(t)
 
-      if (errors.length !== 0) {
+      if (errors.length > 0) {
         setErrors(errors)
       } else {
         mergeLibrary(tracks)

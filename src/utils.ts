@@ -24,8 +24,9 @@ export function convertGoogleDrive(driveUrl: string): string {
     url.hostname === "drive.google.com" &&
     url.pathname.startsWith("/file/d/")
   ) {
-    return `https://drive.google.com/uc?export=download&id=${url.pathname.split("/")[3]
-      }`
+    return `https://drive.google.com/uc?export=download&id=${
+      url.pathname.split("/")[3]
+    }`
   }
 
   return driveUrl
@@ -67,13 +68,18 @@ export interface TrackValidation {
   tagsValidation?: string
 }
 
-export function checkTrack(track: Track): CheckResult<Track, TrackValidation | undefined> {
+export function checkTrack(
+  track: Track,
+): CheckResult<Track, TrackValidation | undefined> {
   const { fixed: title, validation: titleValidation } = checkTitle(track.title)
   const { fixed: url, validation: urlValidation } = checkUrl(track.url)
   const { fixed: tags, validation: tagsValidation } = checkTags(track.tags)
 
   return {
     fixed: { title, url, tags },
-    validation: titleValidation || urlValidation || tagsValidation ? { titleValidation, urlValidation, tagsValidation } : undefined
+    validation:
+      titleValidation || urlValidation || tagsValidation
+        ? { titleValidation, urlValidation, tagsValidation }
+        : undefined,
   }
 }
