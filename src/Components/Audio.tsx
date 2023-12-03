@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react"
-import { useMessage } from "./MessageProvider"
-import { TrackProgress } from "./TrackProgress"
+import { useEffect, useMemo, useRef } from "react"
 import { Action } from "../mb"
 import { convertGoogleDrive, getSeconds } from "../utils"
+import { useMessage } from "./MessageProvider"
+import { TrackProgress } from "./TrackProgress"
 
 interface AudioProps {
   ready: boolean
@@ -13,7 +13,6 @@ interface AudioProps {
 export function Audio(props: AudioProps) {
   const { ready, volume, mute } = props
   const currentMessage = useMessage()
-  const [duration, setDuration] = useState<number | undefined>(undefined)
 
   const ref = useRef<HTMLAudioElement>(null)
 
@@ -24,20 +23,22 @@ export function Audio(props: AudioProps) {
   }, [volume])
 
   useEffect(() => {
-    if (ref.current && currentMessage && duration && ready) {
+    if (ref.current && currentMessage && ready) {
       switch (currentMessage.action) {
         case Action.Play:
           ref.current.currentTime =
-            (currentMessage.offset + getSeconds(currentMessage.time)) % duration
+            (currentMessage.offset + getSeconds(currentMessage.time)) %
+            currentMessage.duration
           ref.current.paused && ref.current.play()
           break
         case Action.Pause:
-          ref.current.currentTime = currentMessage.offset % duration
+          ref.current.currentTime =
+            currentMessage.offset % currentMessage.duration
           ref.current.paused || ref.current.pause()
           break
       }
     }
-  }, [ready, currentMessage, duration])
+  }, [ready, currentMessage])
 
   const url = useMemo(() => {
     if (currentMessage) {
@@ -57,11 +58,8 @@ export function Audio(props: AudioProps) {
         controls={false}
         loop={true}
         muted={mute}
-        onLoadedMetadata={e => {
-          setDuration((e.target as HTMLAudioElement).duration)
-        }}
       />
-      <TrackProgress duration={duration} />
+      <TrackProgress />
     </>
   )
 }

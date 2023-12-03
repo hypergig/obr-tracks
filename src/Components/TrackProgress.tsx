@@ -6,9 +6,9 @@ import {
   useTheme,
 } from "@mui/material"
 import { useEffect, useState } from "react"
-import { useMessage } from "./MessageProvider"
 import { Action } from "../mb"
 import { getSeconds } from "../utils"
+import { useMessage } from "./MessageProvider"
 
 function secondsToDisplay(seconds: number): string {
   return new Date(seconds * 1000).toISOString().substring(14, 19)
@@ -23,32 +23,32 @@ function TimeTypography(props: { seconds: number }) {
   )
 }
 
-export function TrackProgress(props: { duration: number | undefined }) {
-  const { duration } = props
+export function TrackProgress() {
   const currentMessage = useMessage()
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    if (currentMessage && duration) {
+    if (currentMessage) {
       // on pause, just set the progression and wait for unpause
       if (currentMessage.action === Action.Pause) {
-        setProgress(currentMessage.offset % duration)
+        setProgress(currentMessage.offset % currentMessage.duration)
         return
       }
 
       // on play, update progress every second
       const id = setInterval(() => {
         setProgress(
-          (currentMessage.offset + getSeconds(currentMessage.time)) % duration,
+          (currentMessage.offset + getSeconds(currentMessage.time)) %
+            currentMessage.duration,
         )
       }, 1000)
       return () => clearInterval(id)
     }
 
     setProgress(0)
-  }, [duration, currentMessage])
+  }, [currentMessage])
 
-  if (!duration) {
+  if (!currentMessage) {
     return <Skeleton variant="rounded" animation="wave" height={5} />
   }
 
@@ -64,9 +64,9 @@ export function TrackProgress(props: { duration: number | undefined }) {
       <LinearProgress
         sx={{ borderRadius: 1, width: "100%" }}
         variant="determinate"
-        value={(progress / duration) * 100}
+        value={(progress / currentMessage.duration) * 100}
       />
-      <TimeTypography seconds={duration} />
+      <TimeTypography seconds={currentMessage.duration} />
     </Stack>
   )
 }
