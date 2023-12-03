@@ -20,15 +20,17 @@ export interface Message {
   time: Date
   action: Action
   offset: number
+  duration: number
   track: Track
 }
 
-function newPlayMessage(track: Track): Message {
+function newPlayMessage(track: Track, duration: number): Message {
   return {
     id: uuidv4(),
     time: now(),
     action: Action.Play,
     offset: 0,
+    duration: duration,
     track: track,
   }
 }
@@ -38,7 +40,7 @@ function pauseCurrentMessage(): Message {
     throw new ObrError("Unable to pause before receiving first message")
   }
 
-  const m = newPlayMessage(currentMessage.track)
+  const m = newPlayMessage(currentMessage.track, currentMessage.duration)
   m.action = Action.Pause
   m.offset = currentMessage.offset + getSeconds(currentMessage.time)
   return m
@@ -49,7 +51,7 @@ function resumeCurrentMessage(): Message {
     throw new ObrError("Unable to resume before receiving first message")
   }
 
-  const m = newPlayMessage(currentMessage.track)
+  const m = newPlayMessage(currentMessage.track, currentMessage.duration)
   m.action = Action.Play
   m.offset = currentMessage.offset
   return m
@@ -114,7 +116,7 @@ export function play(track: Track) {
   }
   audio.onloadedmetadata = () => {
     OBR.room.setMetadata({
-      [path]: newPlayMessage(track),
+      [path]: newPlayMessage(track, audio.duration),
     })
   }
 
