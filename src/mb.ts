@@ -6,7 +6,7 @@ import { analytics } from "./firebase"
 import { key } from "./key"
 import { now } from "./time"
 import { Track } from "./track"
-import { getSeconds } from "./utils"
+import { checkTrack, getSeconds } from "./utils"
 
 const path = key("control")
 
@@ -99,9 +99,26 @@ export function onMessage(
 
 export function play(track: Track) {
   logEvent(analytics, "play")
-  OBR.room.setMetadata({
-    [path]: newPlayMessage(track),
-  })
+
+  // validate the track
+  const { fixed, validation } = checkTrack(track)
+  if (validation) {
+    throw new ObrError("Track validation failed", fixed, validation)
+  }
+
+  // test the url
+  const audio = new Audio()
+  audio.preload = "metadata"
+  audio.onerror = () => {
+    throw new ObrError("Audio error: Unable to play track", fixed)
+  }
+  audio.onloadedmetadata = () => {
+    OBR.room.setMetadata({
+      [path]: newPlayMessage(track),
+    })
+  }
+
+  audio.src = fixed.url
 }
 
 export function pause() {
