@@ -35,10 +35,7 @@ function newPlayMessage(track: Track): Message {
 
 function pauseCurrentMessage(): Message {
   if (!currentMessage) {
-    throw new ObrError(
-      "unable to pause before receiving first message",
-      currentMessage,
-    )
+    throw new ObrError("Unable to pause before receiving first message")
   }
 
   const m = newPlayMessage(currentMessage.track)
@@ -49,10 +46,7 @@ function pauseCurrentMessage(): Message {
 
 function resumeCurrentMessage(): Message {
   if (!currentMessage) {
-    throw new ObrError(
-      "unable to resume before receiving first message",
-      currentMessage,
-    )
+    throw new ObrError("Unable to resume before receiving first message")
   }
 
   const m = newPlayMessage(currentMessage.track)

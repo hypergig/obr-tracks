@@ -125,12 +125,12 @@ export function TrackDialog(props: Props) {
   const { onClose, tagSuggestions, track } = props
 
   const [state, dispatch] = useReducer(reducer, {
-    track: emptyTrack,
+    track: emptyTrack(),
     readyToSave: false,
   })
 
   useEffect(() => {
-    dispatch({ type: ActionType.setTrack, payload: track ?? emptyTrack })
+    dispatch({ type: ActionType.setTrack, payload: track ?? emptyTrack() })
   }, [track])
 
   useEffect(() => {

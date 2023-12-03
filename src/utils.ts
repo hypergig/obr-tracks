@@ -13,7 +13,7 @@ export function getSeconds(time: Date) {
 export function convertGoogleDrive(driveUrl: string): string {
   const { fixed, validation } = checkUrl(driveUrl)
   if (validation) {
-    throw new ObrError(validation, fixed)
+    throw new ObrError(`Url validation failed: ${fixed}: ${validation}`)
   }
 
   const url = new URL(fixed)

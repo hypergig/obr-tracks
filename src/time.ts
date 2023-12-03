@@ -18,13 +18,15 @@ export function setSkew(callback: () => void) {
       // validate the header exists
       const dateHeader = r.headers.get("date")
       if (dateHeader === null) {
-        throw new ObrError("data header failure", dateHeader)
+        throw new ObrError("Date header failure: Header is null")
       }
 
       // validate the header is a valid time
       const serverTime = new Date(dateHeader)
       if (isNaN(serverTime.getTime())) {
-        throw new ObrError("couldn't convert date header into Date", dateHeader)
+        throw new ObrError(
+          `Date header failure: Unable to convert into Date: ${dateHeader}`,
+        )
       }
 
       // set the skew

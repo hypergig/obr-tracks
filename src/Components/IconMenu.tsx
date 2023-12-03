@@ -28,7 +28,7 @@ const importButton = (setErrors: (errors: CsvError[]) => void) => {
   input.multiple = false
   input.onchange = () => {
     if (input.files?.length !== 1) {
-      throw new ObrError("missingCsvFile", "must select at least 1 csv file")
+      throw new ObrError("CSV error: Must select a csv file")
     }
     input.files[0].text().then(t => {
       const { tracks, errors } = csvToTracks(t)

@@ -1,13 +1,22 @@
 import OBR from "@owlbear-rodeo/sdk"
-import { logEvent } from "firebase/analytics"
-import { analytics } from "./firebase"
+import { Track, toString } from "./track"
+import { TrackValidation } from "./utils"
 
 export class ObrError extends Error {
-  constructor(name: string, object: any) {
-    const message = JSON.stringify(object, null, 2)
+  constructor(message: string, track?: Track, validation?: TrackValidation) {
+    if (validation) {
+      message +=
+        ": " +
+        Object.values(validation)
+          .filter(v => v)
+          .join(" / ")
+    }
+
+    if (track) {
+      message += ": " + toString(track)
+    }
+
     super(message)
-    this.name = name
-    logEvent(analytics, "exception", { description: name })
-    OBR.notification.show(`${this.name}: ${this.message}`, "ERROR")
+    OBR.notification.show(message, "ERROR")
   }
 }
