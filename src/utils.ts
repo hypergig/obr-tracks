@@ -51,10 +51,6 @@ export function checkUrl(url: string): CheckResult<string, string> {
     return { fixed, validation: "Invalid url" }
   }
 
-  if (!url.endsWith(".mp3")) {
-    return { fixed, validation: "Url must be of an mp3 file" }
-  }
-
   return { fixed }
 }
 
