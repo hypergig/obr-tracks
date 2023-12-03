@@ -1,7 +1,7 @@
 {
   "name": "Tracks",
   "description": "Play long looping background music and ambiance from your own library with builtin search and synchronized playback",
-  "version": "v1.2.0",
+  "version": "1.3.0",
   "manifest_version": 1,
   "icon": "/tracks_256.png",
   "author": "Jordan Cohen",
