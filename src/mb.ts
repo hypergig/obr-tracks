@@ -61,7 +61,19 @@ function resumeCurrentMessage(): Message {
 let currentMessage: Message | undefined = undefined
 
 function isMessage(value: unknown): value is Message {
-  return (value as Message) !== undefined
+  if (value === undefined) {
+    return false
+  }
+
+  const { id, time, action, offset, duration, track } = value as Message
+  return (
+    id !== undefined &&
+    time !== undefined &&
+    action !== undefined &&
+    offset !== undefined &&
+    duration !== undefined &&
+    track !== undefined
+  )
 }
 
 function extractMessage(metadata: Metadata): Message | undefined {
