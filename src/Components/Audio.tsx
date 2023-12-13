@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { Action } from "../mb"
-import { convertGoogleDrive, getSeconds } from "../utils"
+import { getSeconds } from "../utils"
 import { useMessage } from "./MessageProvider"
 import { TrackProgress } from "./TrackProgress"
 
@@ -40,19 +40,12 @@ export function Audio(props: AudioProps) {
     }
   }, [ready, currentMessage])
 
-  const url = useMemo(() => {
-    if (currentMessage) {
-      return convertGoogleDrive(currentMessage.track.url)
-    }
-    return ""
-  }, [currentMessage?.track.url])
-
   return (
     <>
       <audio
         id="tracks-audio-player"
         ref={ref}
-        src={url}
+        src={currentMessage ? currentMessage.track.url : ""}
         autoPlay={false}
         preload="auto"
         controls={false}

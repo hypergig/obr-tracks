@@ -6,7 +6,7 @@ import { analytics } from "./firebase"
 import { key } from "./key"
 import { now } from "./time"
 import { Track } from "./track"
-import { checkTrack, getSeconds } from "./utils"
+import { checkTrack, convertGoogleDrive, getSeconds } from "./utils"
 
 const path = key("control")
 
@@ -120,6 +120,9 @@ export function play(track: Track) {
     throw new ObrError("Track validation failed", fixed, validation)
   }
 
+  // convert google dive urls
+  fixed.url = convertGoogleDrive(fixed.url)
+
   // test the url
   const audio = new Audio()
   audio.preload = "metadata"
@@ -128,7 +131,7 @@ export function play(track: Track) {
   }
   audio.onloadedmetadata = () => {
     OBR.room.setMetadata({
-      [path]: newPlayMessage(track, audio.duration),
+      [path]: newPlayMessage(fixed, audio.duration),
     })
   }
 
