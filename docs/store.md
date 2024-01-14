@@ -16,9 +16,15 @@ Play long looping background music and ambiance from your own library with built
 
 ## What you need to know
 
+### ⚠️ Google Drive no longer supports this kind of usage ⚠️
+
+As of January 10th, 2024 Google drive has stopped supporting embedded files in web applications. This means you can **no longer** use a full access Google Drive url directly with any website. Unfortunately this includes audio files with Tracks, but also extends to maps, tokens, images and any other Google drive file in any other web application. We are recommending users switch over to **[Dropbox](https://www.dropbox.com)** as they still support direct content embedding.
+
+More information can be found in this [Google issue tracker](https://issuetracker.google.com/issues/319531488?pli=1). We are super sorry about how this has affected our users and understand how annoying it is to move file sharing services. Hopefully this _never happens again_.
+
 ### Public access
 
-Tracks will **only** play audio files that are publicly available on the internet. This means your music needs to be hosted from a provider that offers public file sharing without having to login, such as **Google Drive** or **Dropbox**. If you already use a free TTRPG music site check to see if they offer download links of the audio files (most do), if so those URLs should work great with Tracks.
+Tracks will **only** play audio files that are publicly available on the internet. This means your music needs to be hosted from a provider that offers public file sharing without having to login, such as **Dropbox**. If you already use a free TTRPG music site check to see if they offer download links of the audio files (most do), if so those URLs should work great with Tracks.
 
 ### Designed for GMs
 
@@ -32,33 +38,28 @@ Your attention should be on the game, not fiddling with music.
 
 Tracks automatically loops audio forever which makes it perfect for long running background music and ambience. **Tracks It isn't awesome at playing short sound effects and bites.** This may change in the future, keep checking back for updates.
 
-## Quick start with Google Drive
+## Quick start with [Dropbox](https://www.dropbox.com)
 
-1. Upload an audio file to Google Drive
-
-![google dive](https://raw.githubusercontent.com/hypergig/obr-tracks/main/docs/google-drive.png)
-
-2. Share it
+1. Share an **mp3** from [Dropbox](https://www.dropbox.com)
 
 ![share](https://raw.githubusercontent.com/hypergig/obr-tracks/main/docs/share.png)
 
-3. Click **Anyone with the link**
+2. Make sure it says
+   > Anyone with this link **can view**
 
-![link](https://raw.githubusercontent.com/hypergig/obr-tracks/main/docs/link.png)
-
-4. Copy the link
+and click **Copy link**
 
 ![copy](https://raw.githubusercontent.com/hypergig/obr-tracks/main/docs/copy-link.png)
 
-5. Click **Add Track** in the menu
+3. Switch back to **Tracks** and click **Add Track** in the menu
 
 ![menu](https://raw.githubusercontent.com/hypergig/obr-tracks/main/docs/add.png)
 
-6. Fill in the **Title**, paste the **Url**, and set some **Tags** so you can quickly find the track later
+4. Fill in the **Title**, paste the **Url**, and set some **Tags** so you can quickly find the track later
 
 ![add](https://raw.githubusercontent.com/hypergig/obr-tracks/main/docs/add-track.png)
 
-7. Save!
+5. Save!
 
 ## Search
 
