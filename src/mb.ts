@@ -6,7 +6,7 @@ import { analytics } from "./firebase"
 import { key } from "./key"
 import { now } from "./time"
 import { Track } from "./track"
-import { checkTrack, convertGoogleDrive, getSeconds } from "./utils"
+import { checkTrack, getSeconds } from "./utils"
 
 const path = key("control")
 
@@ -119,9 +119,6 @@ export function play(track: Track) {
   if (validation) {
     throw new ObrError("Track validation failed", fixed, validation)
   }
-
-  // convert google dive urls
-  fixed.url = convertGoogleDrive(fixed.url)
 
   // test the url
   const audio = new Audio()
