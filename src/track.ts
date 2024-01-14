@@ -5,9 +5,7 @@ export interface Track {
 }
 
 export function toString(track: Track): string {
-  return `Title: ${track.title}: Url: ${track.url}: Tags: ${
-    track.tags ? track.tags.join("|") : "[]"
-  }`
+  return `Title: ${track.title}: Url: ${track.url}`
 }
 
 export function emptyTrack(): Track {

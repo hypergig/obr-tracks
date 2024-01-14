@@ -41,8 +41,7 @@ export function checkUrl(url: string): CheckResult<string, string> {
     if (urlObject.hostname === "drive.google.com") {
       return {
         fixed,
-        validation:
-          "Google Drive no longer supports this type of usage, please consider an alternative file sharing service",
+        validation: "Google Drive urls no longer work",
       }
     }
   } catch {
