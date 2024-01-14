@@ -1,9 +1,26 @@
+import { ObrError } from "./errors"
 import { now } from "./time"
 import { Track } from "./track"
 
 // get number of seconds between two times
 export function getSeconds(time: Date) {
   return (now().getTime() - new Date(time).getTime()) / 1000
+}
+
+// convert urls into direct downloadable urls, currently only supports dropbox
+export function convertToDirectDownloadable(url: string): string {
+  let urlObject: URL
+  try {
+    urlObject = new URL(url)
+  } catch {
+    throw new ObrError(`Failed to convert, invalid url: ${url}`)
+  }
+
+  if (urlObject.hostname.endsWith("dropbox.com")) {
+    urlObject.searchParams.set("dl", "1")
+    return urlObject.href
+  }
+  return url
 }
 
 export interface CheckResult<F, V> {

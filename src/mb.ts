@@ -6,7 +6,7 @@ import { analytics } from "./firebase"
 import { key } from "./key"
 import { now } from "./time"
 import { Track } from "./track"
-import { checkTrack, getSeconds } from "./utils"
+import { checkTrack, convertToDirectDownloadable, getSeconds } from "./utils"
 
 const path = key("control")
 
@@ -119,6 +119,9 @@ export function play(track: Track) {
   if (validation) {
     throw new ObrError("Track validation failed", fixed, validation)
   }
+
+  // convert url into direct downloadable if applicable
+  fixed.url = convertToDirectDownloadable(fixed.url)
 
   // test the url
   const audio = new Audio()
