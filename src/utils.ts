@@ -18,6 +18,7 @@ export function convertToDirectDownloadable(url: string): string {
 
   if (urlObject.hostname.endsWith("dropbox.com")) {
     urlObject.searchParams.set("dl", "1")
+    urlObject.hostname = "dl.dropboxusercontent.com"
     return urlObject.href
   }
   return url
